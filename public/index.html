@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MiniSocial</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===================== NAVBAR ===================== -->
+<header class="navbar">
+    <div class="navbar-inner">
+        <div class="logo" onclick="navigateTo('feed')">🌐 MiniSocial</div>
+        <nav id="navLinks" class="nav-links hidden">
+            <button onclick="navigateTo('feed')">Feed</button>
+            <button onclick="navigateTo('global')">Explore</button>
+            <button onclick="navigateTo('profile', currentUser.id)">My Profile</button>
+            <button onclick="logout()" class="logout-btn">Logout</button>
+        </nav>
+    </div>
+</header>
+
+<!-- ===================== AUTH SCREEN ===================== -->
+<div id="authScreen" class="auth-container">
+    <div class="auth-card">
+        <h1>🌐 MiniSocial</h1>
+        <p class="subtitle">Connect. Share. Follow.</p>
+
+        <div class="tabs">
+            <button class="tab-btn active" id="loginTab" onclick="switchTab('login')">Log In</button>
+            <button class="tab-btn" id="registerTab" onclick="switchTab('register')">Sign Up</button>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <form id="loginForm" class="auth-form">
+            <input type="text" id="loginUsername" placeholder="Username or Email" required>
+            <input type="password" id="loginPassword" placeholder="Password" required>
+            <button type="submit" class="primary-btn">Log In</button>
+        </form>
+
+        <!-- REGISTER FORM -->
+        <form id="registerForm" class="auth-form hidden">
+            <input type="text" id="regUsername" placeholder="Username" required>
+            <input type="email" id="regEmail" placeholder="Email" required>
+            <input type="password" id="regPassword" placeholder="Password (min 6 chars)" required>
+            <textarea id="regBio" placeholder="Short bio (optional)"></textarea>
+            <button type="submit" class="primary-btn">Create Account</button>
+        </form>
+
+        <p id="authError" class="error-msg"></p>
+    </div>
+</div>
+
+<!-- ===================== MAIN APP ===================== -->
+<main id="appScreen" class="app-container hidden">
+
+    <!-- FEED VIEW -->
+    <section id="feedView" class="view">
+        <div class="composer card">
+            <textarea id="postContent" placeholder="What's on your mind?" maxlength="500"></textarea>
+            <div class="composer-footer">
+                <span id="charCount">0/500</span>
+                <button onclick="createPost()" class="primary-btn small">Post</button>
+            </div>
+        </div>
+        <div class="feed-tabs">
+            <button class="feed-tab active" id="followingTab" onclick="loadFeed('following')">Following</button>
+            <button class="feed-tab" id="globalTab" onclick="loadFeed('global')">Global</button>
+        </div>
+        <div id="postsContainer"></div>
+    </section>
+
+    <!-- PROFILE VIEW -->
+    <section id="profileView" class="view hidden">
+        <div class="profile-header card">
+            <div class="profile-avatar" id="profileAvatar"></div>
+            <div class="profile-info">
+                <h2 id="profileUsername"></h2>
+                <p id="profileBio" class="bio-text"></p>
+                <div class="profile-stats">
+                    <div class="stat"><strong id="profilePostCount">0</strong><span>Posts</span></div>
+                    <div class="stat" onclick="openFollowList('followers')"><strong id="profileFollowerCount">0</strong><span>Followers</span></div>
+                    <div class="stat" onclick="openFollowList('following')"><strong id="profileFollowingCount">0</strong><span>Following</span></div>
+                </div>
+            </div>
+            <div class="profile-actions">
+                <button id="followBtn" class="primary-btn small hidden" onclick="toggleFollow()"></button>
+                <button id="editProfileBtn" class="secondary-btn small hidden" onclick="openEditProfile()">Edit Profile</button>
+            </div>
+        </div>
+
+        <!-- Edit profile inline form -->
+        <div id="editProfileCard" class="card hidden">
+            <textarea id="editBioInput" placeholder="Update your bio..." maxlength="200"></textarea>
+            <div class="composer-footer">
+                <button onclick="saveProfile()" class="primary-btn small">Save</button>
+                <button onclick="closeEditProfile()" class="secondary-btn small">Cancel</button>
+            </div>
+        </div>
+
+        <div id="profilePostsContainer"></div>
+    </section>
+
+</main>
+
+<!-- ===================== POST DETAIL MODAL ===================== -->
+<div id="postModal" class="modal-overlay hidden" onclick="closeModalOnOverlay(event)">
+    <div class="modal-content card">
+        <button class="modal-close" onclick="closeModal()">✕</button>
+        <div id="modalPost"></div>
+        <hr>
+        <h4>Comments</h4>
+        <div id="modalComments"></div>
+        <div class="comment-composer">
+            <input type="text" id="commentInput" placeholder="Write a comment...">
+            <button onclick="submitComment()" class="primary-btn small">Send</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== FOLLOW LIST MODAL ===================== -->
+<div id="followModal" class="modal-overlay hidden" onclick="closeFollowModalOnOverlay(event)">
+    <div class="modal-content card">
+        <button class="modal-close" onclick="closeFollowModal()">✕</button>
+        <h4 id="followModalTitle">Users</h4>
+        <div id="followModalList"></div>
+    </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
